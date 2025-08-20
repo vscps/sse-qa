@@ -20,7 +20,7 @@ export function connectDB(): Promise<sqlite3.Database> {
           console.log("Connected to the SQLite database.");
           db!.run(
             `
-                    CREATE TABLE IF NOT EXISTS blog_entries (
+                    CREATE TABLE IF NOT EXISTS question_entries (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         sessionId TEXT NOT NULL,
                         question TEXT NOT NULL,
@@ -31,10 +31,28 @@ export function connectDB(): Promise<sqlite3.Database> {
                 `,
             (createErr: Error | null) => {
               if (createErr) {
-                console.error("Error creating table:", createErr.message);
+                console.error("Error creating table question_entries.", createErr.message);
                 reject(createErr);
               } else {
-                console.log("Table checked/created.");
+                console.log("Table question_entries checked/created.");
+                resolve(db as sqlite3.Database);
+              }
+            }
+          );
+          db!.run(
+            `
+                    CREATE TABLE IF NOT EXISTS session_info (
+                        sessionId TEXT PRIMERY KEY NOT NULL,
+                        title TEXT NOT NULL,
+                        description TEXT NOT NULL
+                    )
+                `,
+            (createErr: Error | null) => {
+              if (createErr) {
+                console.error("Error creating table session_info:", createErr.message);
+                reject(createErr);
+              } else {
+                console.log("Table session_info checked/created.");
                 resolve(db as sqlite3.Database);
               }
             }
