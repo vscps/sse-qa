@@ -2,6 +2,7 @@ require('dotenv').config();
 
 import express, { NextFunction } from 'express';
 import cors from 'cors';
+import { connectDB } from './db/database';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,6 +12,9 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+// connect to sqlite db
+connectDB();
 
 // SSE endpoint
 app.get("/events", (req, res) => {
