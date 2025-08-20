@@ -58,3 +58,15 @@ let questions: Question[] = [
     session_id: "session-2",
   },
 ];
+
+// GET all questions and filter optionally by sessionID if sessionID is present as a query
+router.get("/", (req: Request, res: Response) => {
+  const sessionId = req.query.sessionId as string;
+  if (sessionId) {
+    const activeSessionQuestions = questions.filter(
+      (q) => q.session_id === sessionId
+    );
+    return res.json(activeSessionQuestions);
+  }
+  res.json(questions);
+});
