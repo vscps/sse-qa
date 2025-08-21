@@ -2,12 +2,6 @@ import { Router, Request, Response } from "express";
 
 const router = Router();
 
-interface Session {
-  id: string;
-  title: string;
-  description: string;
-}
-
 interface Question {
   id: number;
   question: string;
@@ -16,20 +10,6 @@ interface Question {
   createdAt: string;
   sessionId: string;
 }
-
-// Mock sessions data
-const sessions: Session[] = [
-  {
-    id: "session-1",
-    title: "Tech Q&A Live",
-    description: "Ask anything about software development",
-  },
-  {
-    id: "session-2",
-    title: "Startup Advice",
-    description: "Questions about starting your own company",
-  },
-];
 
 // Mock questions data
 let questions: Question[] = [
@@ -85,7 +65,8 @@ router.get("/:id", (req: Request, res: Response) => {
 
 // Create a new question (POST)
 router.post("/", (req: Request, res: Response) => {
-  const { question, sessionId } = req.body as {
+  const sessionId = req.query.sessionId as string;
+  const { question } = req.body as {
     question: string;
     sessionId: string;
   };
