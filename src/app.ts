@@ -14,10 +14,8 @@ app.use(express.json());
 app.use("/questions", questionEndpoints);
 app.use("/sessions", sessionEndpoints);
 
-
 // connect to sqlite db
 connectDB().then(() => {
-
   app.get("/updates", (req, res) => {
     // Set necessary headers for SSE
     res.setHeader("Content-Type", "text/event-stream");
@@ -52,14 +50,15 @@ connectDB().then(() => {
     console.log(`Open http://localhost:${PORT} in your browser.`);
   });
 
-process.on("SIGINT", async () => {
-  console.log("SIGINT received. Closing database connection...");
-  await closeDB();
-  process.exit(0);
-});
+  process.on("SIGINT", async () => {
+    console.log("SIGINT received. Closing database connection...");
+    await closeDB();
+    process.exit(0);
+  });
 
-process.on("SIGTERM", async () => {
-  console.log("SIGTERM received. Closing database connection...");
-  await closeDB();
-  process.exit(0);
+  process.on("SIGTERM", async () => {
+    console.log("SIGTERM received. Closing database connection...");
+    await closeDB();
+    process.exit(0);
+  });
 });
