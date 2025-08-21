@@ -1,4 +1,4 @@
-import db from '../config/db'
+import { getDB } from '../db/database'
 import type { Question } from '../types/model'
 
 // DTO
@@ -9,7 +9,8 @@ type NewQuestionData = {
 
 export const create = (questionData: NewQuestionData): Promise<Question> => {
   const { question, sessionId } = questionData
-  const sql = `INSERT INTO questions (question, session_id) VALUES (?, ?);`
+  const sql = `INSERT INTO question_entries (question, sessionId, numLikes, isAnswered, createdAt) VALUES (?, ?, 0, 0, datetime('now'));`
+  const db = getDB()
 
   return new Promise((resolve, reject) => {
     db.run(
@@ -18,7 +19,7 @@ export const create = (questionData: NewQuestionData): Promise<Question> => {
       function (this: { lastID: number }, err: Error | null) {
         if (err) return reject(err)
         db.get(
-          'SELECT * FROM questions WHERE id = ?',
+          'SELECT * FROM question_entries WHERE id = ?',
           [this.lastID],
           (getErr: Error | null, row: Question) => {
             if (getErr) return reject(getErr)
@@ -33,7 +34,8 @@ export const create = (questionData: NewQuestionData): Promise<Question> => {
 export const incrementUpvotes = (
   questionId: number,
 ): Promise<Question | null> => {
-  const sql = `UPDATE questions SET upvotes = upvotes + 1 WHERE id = ?;`
+  const sql = `UPDATE question_entries SET numLikes = numLikes + 1 WHERE id = ?;`
+  const db = getDB()
 
   return new Promise((resolve, reject) => {
     db.run(
@@ -43,7 +45,7 @@ export const incrementUpvotes = (
         if (err) return reject(err)
         if (this.changes === 0) return resolve(null)
         db.get(
-          'SELECT * FROM questions WHERE id = ?',
+          'SELECT * FROM question_entries WHERE id = ?',
           [questionId],
           (getErr: Error | null, row: Question) => {
             if (getErr) return reject(getErr)
@@ -58,7 +60,8 @@ export const incrementUpvotes = (
 export const decrementUpvotes = (
   questionId: number,
 ): Promise<Question | null> => {
-  const sql = `UPDATE questions SET upvotes = upvotes - 1 WHERE id = ? AND upvotes > 0;`
+  const sql = `UPDATE question_entries SET numLikes = numLikes - 1 WHERE id = ? AND numLikes > 0;`
+  const db = getDB()
 
   return new Promise((resolve, reject) => {
     db.run(
@@ -68,7 +71,7 @@ export const decrementUpvotes = (
         if (err) return reject(err)
         if (this.changes === 0) return resolve(null)
         db.get(
-          'SELECT * FROM questions WHERE id = ?',
+          'SELECT * FROM question_entries WHERE id = ?',
           [questionId],
           (getErr: Error | null, row: Question) => {
             if (getErr) return reject(getErr)
