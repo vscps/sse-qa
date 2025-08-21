@@ -7,12 +7,6 @@ import {
 
 const router = Router()
 
-interface Session {
-  id: string
-  title: string
-  description: string
-}
-
 interface Question {
   id: number
   question: string
@@ -21,20 +15,6 @@ interface Question {
   createdAt: string
   sessionId: string
 }
-
-// Mock sessions data
-const sessions: Session[] = [
-  {
-    id: 'session-1',
-    title: 'Tech Q&A Live',
-    description: 'Ask anything about software development',
-  },
-  {
-    id: 'session-2',
-    title: 'Startup Advice',
-    description: 'Questions about starting your own company',
-  },
-]
 
 // Mock questions data
 let questions: Question[] = [
@@ -85,7 +65,7 @@ router.patch('/:questionId/upvote', upvoteQuestion)
 // Remove upvote from a question
 router.patch('/:questionId/downvote', removeUpvote)
 
-// GET a specific question by ID (rota genérica por último)
+// GET a specific question by ID
 router.get('/:id', (req: Request, res: Response) => {
   const { id } = req.params
   const question = questions.find((question) => question.id === parseInt(id))
