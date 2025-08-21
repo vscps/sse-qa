@@ -65,6 +65,11 @@ router.patch('/:questionId/upvote', upvoteQuestion)
 // Remove upvote from a question
 router.patch('/:questionId/downvote', removeUpvote)
 
+// GET a specific question by ID
+router.get('/:id', (req: Request, res: Response) => {
+  const { id } = req.params
+  const question = questions.find((question) => question.id === parseInt(id))
+
   if (!question) {
     return res.status(404).json({ error: 'Question not found' })
   }
