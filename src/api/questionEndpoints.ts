@@ -76,9 +76,6 @@ router.get('/', (req: Request, res: Response) => {
   res.json(questions)
 })
 
-// Create a new question (POST)
-router.post('/', createQuestion)
-
 // Create a new question with sessionId in URL
 router.post('/:sessionId', createQuestion)
 
