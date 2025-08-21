@@ -1,17 +1,23 @@
-require('dotenv').config();
+require("dotenv").config();
 
-import express, { NextFunction } from 'express';
-import cors from 'cors';
+
+import express, { NextFunction } from "express";
+import cors from "cors";
+import questionEndpoints from "./api/questionEndpoints";
 import { closeDB, connectDB } from './db/database';
 
-const app = express();
-const PORT = process.env.PORT || 3000;
 
-app.use(cors()); 
+const app = express();
+const PORT = process.env.PORT || 3002;
+
+app.use(cors());
+app.use(express.json());
+app.use("/questions", questionEndpoints);
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Hello World! 1234");
 });
+
 
 // connect to sqlite db
 connectDB().then(() => {
@@ -34,10 +40,3 @@ process.on("SIGTERM", async () => {
   await closeDB();
   process.exit(0);
 });
-
-
-
-
-
-
-
